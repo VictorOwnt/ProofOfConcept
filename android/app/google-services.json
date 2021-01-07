@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "413265928583",
+    "firebase_url": "https://proofofconcept-355a8.firebaseio.com",
+    "project_id": "proofofconcept-355a8",
+    "storage_bucket": "proofofconcept-355a8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:413265928583:android:e79f6f1dafdd7efc627322",
+        "android_client_info": {
+          "package_name": "com.proofofconcept"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "413265928583-kgo9d32t8rkar4jg1n0ik43to53g0src.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.proofofconcept",
+            "certificate_hash": "d2efb9e9bead953463df49249e3180c0ac3aa1e1"
+          }
+        },
+        {
+          "client_id": "413265928583-uimr8qsg1ker3jm3o88oi7jvd2a2phs9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC8y1XJn0LUH8WyLFG2HFioM5YbKxChrZc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "413265928583-uimr8qsg1ker3jm3o88oi7jvd2a2phs9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "413265928583-9besnm4a2t7uqa5atsc683aunr0r5spn.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.proofOfConcept.ios"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
