@@ -103,29 +103,29 @@ const checkPermissionsAudio = async (navigation) => {
   }
 };
 
-const convertToBase64 = (res, navigation, destination) => {
+const getFilePath = (res, navigation, destination) => {
   let response = {};
-  let data = '';
-  RNFetchBlob.fs.readStream(res.uri, 'base64', 4095).then((ifstream) => {
-    ifstream.open();
-    ifstream.onData((chunk) => {
-      data += chunk;
-    });
-    ifstream.onError((err) => {
-      console.log(err);
-    });
-    ifstream.onEnd(() => {
-      response = {
-        fileName: res.name,
-        fileSize: res.size,
-        type: res.type,
-        uri: res.uri,
-        base64: data,
-      };
-      navigation.navigate(destination, {
-        response: response,
-        visible: true,
-      });
+  let type = '';
+  switch (destination) {
+    case 'Camera':
+      type = 'image';
+      break;
+    case 'Video':
+      type = 'video';
+      break;
+    case 'Audio':
+      type = 'audio';
+  }
+  RNFetchBlob.fs.stat(res.uri).then((file) => {
+    response = {
+      fileName: file.filename,
+      fileSize: file.size,
+      type: type,
+      uri: 'file://' + file.path,
+    };
+    navigation.navigate(destination, {
+      response: response,
+      visible: true,
     });
   });
 };
@@ -133,26 +133,23 @@ const convertToBase64 = (res, navigation, destination) => {
 const pickFiles = async (navigation) => {
   try {
     const res = await DocumentPicker.pick({
-      type: DocumentPicker.types.images, //DocumentPicker.types.allFiles,
+      type: [
+        DocumentPicker.types.images,
+        DocumentPicker.types.audio,
+        DocumentPicker.types.video,
+      ],
     });
     const type = res.type.split('/')[0];
     switch (type) {
       case 'image':
-        convertToBase64(res, navigation, 'Camera');
+        getFilePath(res, navigation, 'Camera');
         break;
-      /*VIDEO IS PRAKTISCH NIET HAALBAAR, heb het uitgewerkt en het staat nu in commentaar.
-      De documenntpicker pakt een speciale uri voor het bestand de content uri. Deze kan niet opgeslagen
-      worden in firebase omdat de toegang daarvoor geweigerd wordt.
-      De video moet dus omgezet worden naar base64, wat al niet praktisch is voor grote videos, maakt ook het bestand
-      groter, daarna moet de base64 locaal weer omgezet worden in video formaat en opgeslagen worden op het toestel,
-      wat er dus voor zorgt dat de video 2 maal op uw toestel staat. Dit is op zich allemaal niet zo een probleem, maar
-      voor een video van 1 minuut moet het ook heeel lang laden om van video naar base64 omgezet te worden en hetzelfde
-      geldt voor het proberen afspelen van die video daarna uit de backpack. Bovenop is wat hierboven beschreven staat
-      enkel het geval voor Android, voor IOS zou de video nog eens EXTRA omgezet moeten worden naar afspeelbaar formaat, wat
-      nog langer zou duren.
       case 'video':
-        convertToBase64(res, navigation, 'Video');
-        break;*/
+        getFilePath(res, navigation, 'Video');
+        break;
+      case 'audio':
+        getFilePath(res, navigation, 'Audio');
+        break;
     }
   } catch (err) {
     if (DocumentPicker.isCancel(err)) {

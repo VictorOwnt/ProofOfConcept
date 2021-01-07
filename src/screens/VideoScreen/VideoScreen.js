@@ -64,11 +64,7 @@ export default function VideoScreen({route, navigation}) {
   //TODO add thumbnail & deleteknop
   return (
     <SafeAreaView style={styles.container}>
-      {loading ? (
-        <ActivityIndicator />
-      ) : (
-        <VideoPlayer video={video} /*base64={route.params.base64}*/ />
-      )}
+      {loading ? <ActivityIndicator /> : <VideoPlayer video={video} />}
       <TitleDialog
         visibility={visible}
         uid={route.params.uid}

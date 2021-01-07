@@ -40,12 +40,19 @@ export default function AudioScreen({route, navigation}) {
     ios: `${dirs.CacheDir}/${recordPath}`,
     android: 'sdcard/audio.mp3',
   });
+  const [docSelectedPath, setDocSelectedPath] = useState('');
 
   //Voor callback, anders werkt het niet
   const [itemId, setItemId] = useState();
   const [title, setTitle] = useState();
 
   useEffect(() => {
+    if (route.params.response) {
+      setDocSelectedPath(route.params.response.uri);
+      setItemId(333333);
+      setTitle(route.params.response.fileName);
+      setHasRecorded(true);
+    }
     if (route.params.item) {
       setItemId(route.params.item.id);
       setTitle(route.params.item.title);
@@ -66,7 +73,14 @@ export default function AudioScreen({route, navigation}) {
         navigation.dispatch(e.data.action);
       });
     });
-  }, [navigation, onStopPlay, savePath, route.params.item, startedPlaying]);
+  }, [
+    navigation,
+    onStopPlay,
+    savePath,
+    route.params.item,
+    startedPlaying,
+    route.params.response,
+  ]);
 
   const onStartRecord = async () => {
     const audioSet: AudioSet = {
@@ -103,7 +117,11 @@ export default function AudioScreen({route, navigation}) {
   };
 
   const onStartPlay = async () => {
-    const res = await audioRecorderPlayer.startPlayer(recordPath);
+    if (docSelectedPath !== '') {
+      await audioRecorderPlayer.startPlayer(docSelectedPath);
+    } else {
+      await audioRecorderPlayer.startPlayer(recordPath);
+    }
     console.log('PLAYING');
     audioRecorderPlayer.setVolume(1.0);
     audioRecorderPlayer.addPlayBackListener(async (e) => {
@@ -177,9 +195,11 @@ export default function AudioScreen({route, navigation}) {
 
   const onSavePress = () => {
     setVisible(true);
-    RNFetchBlob.fs.readFile(savePath, 'base64').then((res) => {
-      setData(res);
-    });
+    RNFetchBlob.fs
+      .readFile(docSelectedPath !== '' ? docSelectedPath : savePath, 'base64')
+      .then((res) => {
+        setData(res);
+      });
     //deleteFile(path, true);
   };
 
